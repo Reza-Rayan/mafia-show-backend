@@ -16,11 +16,7 @@ async function bootstrap() {
   // Initialize Passport
   app.use(passport.initialize());
 
-  // app.enableCors({
-  //   origin: '*',
-  //   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
-  //   credentials: true,
-  // });
+  app.enableCors();
 
   const configService = app.get(ConfigService);
 
@@ -55,6 +51,6 @@ async function bootstrap() {
     },
   });
 
-  await app.listen(3000);
+  await app.listen(configService.get('port'));
 }
 bootstrap();

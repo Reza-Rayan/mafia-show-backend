@@ -12,6 +12,7 @@ import { database } from './db/database';
 import { EventsModule } from './events/events.module';
 import { GameRolesModule } from './game_roles/game_roles.module';
 import { UsersModule } from './users/users.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { UsersModule } from './users/users.module';
     EventsModule,
     AuthModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_INTERCEPTOR,
