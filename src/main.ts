@@ -16,11 +16,11 @@ async function bootstrap() {
   // Initialize Passport
   app.use(passport.initialize());
 
-  app.enableCors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
-    credentials: true,
-  });
+  // app.enableCors({
+  //   origin: '*',
+  //   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
+  //   credentials: true,
+  // });
 
   const configService = app.get(ConfigService);
 
