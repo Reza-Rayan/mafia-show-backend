@@ -51,6 +51,6 @@ async function bootstrap() {
     },
   });
 
-  await app.listen(configService.get('port'));
+  await app.listen(configService.get('port') || 3000);
 }
 bootstrap();
