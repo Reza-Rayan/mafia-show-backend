@@ -16,7 +16,9 @@ async function bootstrap() {
   // Initialize Passport
   app.use(passport.initialize());
 
-  app.enableCors();
+  app.enableCors({
+    origin: '*',
+  });
 
   const configService = app.get(ConfigService);
 
