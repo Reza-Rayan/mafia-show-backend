@@ -107,7 +107,8 @@ export class ArticlesController {
     @Body() updateArticleDto: UpdateArticleDto,
     @UploadedFile() image: Express.Multer.File,
   ) {
-    return this.articlesService.update(id, updateArticleDto, image);
+    const imagePath = image ? image.path : null;
+    return this.articlesService.update(id, updateArticleDto, imagePath);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

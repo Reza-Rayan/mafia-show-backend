@@ -82,24 +82,33 @@ export class ArticlesService {
   async update(
     id: string,
     updateArticleDto: UpdateArticleDto,
-    image?: Express.Multer.File,
+    imagePath?: string, // imagePath could be null if no new image is uploaded
   ) {
     // Find the article by id
     const article = await this.articles.findOne({ where: { id } });
-
+  
     if (!article) {
       throw new NotFoundException('مقاله مورد نظر یافت نشد');
     }
-
-    article.title = updateArticleDto.title ?? article.title;
-    article.content = updateArticleDto.content ?? article.content;
-
-    if (image) {
-      article.image = image.filename;
+  
+    // Conditionally update fields
+    if (updateArticleDto.title) {
+      article.title = updateArticleDto.title;
     }
-
+  
+    if (updateArticleDto.content) {
+      article.content = updateArticleDto.content;
+    }
+  
+    // If a new image path is provided, update the image
+    if (imagePath) {
+      article.image = imagePath;
+    }
+  
+    // Save and return the updated article
     return await this.articles.save(article);
   }
+  
 
   // End here
 
