@@ -59,12 +59,8 @@ export class ArticlesService {
 
     return articles.map((article) => ({
       ...article,
-      created: moment(article.created).format('YYYY/MM/DD HH:mm'),
       image: article.image ? `/${article.image}` : null,
-      comments: article.comments.map((comment) => ({
-        ...comment,
-        created: moment(comment.created).format('YYYY/MM/DD HH:mm'),
-      })),
+      comments: article.comments.map((comment) => comment),
     }));
   }
 
@@ -78,10 +74,7 @@ export class ArticlesService {
       throw new NotFoundException('مقاله مورد نظر یافت نشد!');
     }
 
-    return {
-      ...article,
-      created: moment(article.created).format('YYYY/MM/DD HH:mm'),
-    };
+    return article;
   }
   // End here
 

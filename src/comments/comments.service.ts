@@ -45,10 +45,7 @@ export class CommentsService {
       }
     }
 
-    return comments.map(comment => ({
-      ...comment,
-      created: moment(comment.created).format('YYYY/MM/DD HH:mm'),
-    }));
+    return comments.map(comment => comment);
   }
 
   async findOne(id: string) {
@@ -61,10 +58,7 @@ export class CommentsService {
       throw new NotFoundException('کامنت یافت نشد');
     }
 
-    return {
-      ...comment,
-      created: moment(comment.created).format('YYYY/MM/DD HH:mm'),
-    };
+    return comment;
   }
 
   async update(id: string, updateCommentDto: UpdateCommentDto) {
