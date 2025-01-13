@@ -50,7 +50,7 @@ export class ArticlesController {
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
-        destination: './public/articles',
+        destination: './uploads/articles',
         filename: (req, file, callback) => {
           const uniqueSuffix = file.originalname + '-' + Date.now();
           callback(null, uniqueSuffix + extname(file.originalname));

@@ -20,8 +20,8 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  // Serve static files from the 'public' directory
-  app.use('/public', express.static(join(__dirname, '..', 'public')));
+  // Serve static files from the 'uploads' directory
+  app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
 
   // Swagger Configuration
   const options = new DocumentBuilder()

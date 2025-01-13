@@ -11,8 +11,8 @@ import { Comment } from 'src/comments/entities/comment.entity';
   imports: [
     TypeOrmModule.forFeature([Article, Comment]),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
-      serveRoot: '/public',
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: 'uploads',
     }),
   ],
   controllers: [ArticlesController],

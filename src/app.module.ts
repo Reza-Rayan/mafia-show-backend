@@ -22,8 +22,8 @@ import { AppController } from './app.controller';
       load: [config],
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
-      serveRoot: '/public',
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads',
     }),
     ArticlesModule,
     CommentsModule,

@@ -1,13 +1,12 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
-// Entities
 
 export const database = TypeOrmModule.forRoot({
   type: 'postgres',
-  host: 'mafia-platform-aza-service',
+  host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT) || 5432,
   username: 'postgres',
-  password: 'd1uNnME6kv6rseSJwXPd',
-  database: 'mafia-plbfo_db',
+  password: '2wsx3edc',
+  database: process.env.DB_NAME || 'mafia-platform',
   autoLoadEntities: true,
   synchronize: true,
 });

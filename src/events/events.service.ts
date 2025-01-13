@@ -27,7 +27,7 @@ export class EventsService {
       where: { id: providerId },
     });
 
-    console.log('new event', eventData.player_count);
+    console.log('new event', eventData);
 
     // Check user exist
     if (!provider) {

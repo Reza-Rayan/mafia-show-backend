@@ -57,8 +57,8 @@ export class EventsController {
   @UseInterceptors(
     FileInterceptor('baner', {
       storage: diskStorage({
-        destination: './public/events',
-        filename: (req, file, callback) => {
+        destination: './uploads/events',
+        filename: (_req, file, callback) => {
           const uniqueSuffix =
             Date.now() + '-' + Math.round(Math.random() * 1e9);
           const ext = extname(file.originalname);
