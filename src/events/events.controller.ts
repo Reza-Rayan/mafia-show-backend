@@ -32,7 +32,7 @@ import { UserRole } from 'src/enums/User-Role.enum';
 import { SearchEventDto } from './dto/search-event.dto';
 import { AssignPlayerDto } from './dto/assign-to-game.dto';
 
-@ApiTags('events') // Group all endpoints under 'Events' in Swagger
+@ApiTags('events')
 @Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
@@ -79,8 +79,12 @@ export class EventsController {
   @ApiOperation({ summary: 'Retrieve all events' })
   @ApiResponse({ status: 200, description: 'Return list of all events.' })
   @ApiResponse({ status: 404, description: 'No events found.' })
-  findAll(@Query() searchEventDto: SearchEventDto) {
-    return this.eventsService.findAll(searchEventDto);
+  findAll(
+    @Query() searchEventDto: SearchEventDto,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ) {
+    return this.eventsService.findAll(searchEventDto, { page, limit });
   }
 
   @Get(':id')
@@ -107,10 +111,12 @@ export class EventsController {
     status: 400,
     description: 'Invalid input or missing required fields.',
   })
-  update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateEventDto: UpdateEventDto,
+  ) {
     return this.eventsService.update(id, updateEventDto);
   }
-
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   @Delete(':id')

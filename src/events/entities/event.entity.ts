@@ -1,14 +1,13 @@
+import { GameTypes } from 'src/enums/Game-Type.enum';
+import { User } from 'src/users/entities/user.entity';
 import {
-  Entity,
   Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable,
 } from 'typeorm';
-import { User } from 'src/users/entities/user.entity';
-import { GameRole } from 'src/game_roles/entities/game_role.entity';
-import { GameTypes } from 'src/enums/Game-Type.enum';
 
 @Entity()
 export class Event {
@@ -28,10 +27,18 @@ export class Event {
   description: string;
 
   @Column()
+  province: string;
+
+  @Column()
+  city: string;
+
+  @Column()
   address: string;
 
   @Column({ default: false })
   is_started: boolean;
+  @Column({ default: false })
+  is_super: boolean;
 
   @Column({ type: 'enum', enum: GameTypes, default: GameTypes.CLASSIC })
   game_type: GameTypes;

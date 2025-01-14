@@ -33,10 +33,20 @@ export class CreateEventDto {
   @IsString()
   description?: string;
 
-  @ApiProperty({ example: '123 Main St, Cityville' })
+  @ApiProperty({ example: 'Jahad Square' })
   @IsString()
   @IsNotEmpty()
   address: string;
+
+  @ApiProperty({ example: 'Tehran' })
+  @IsString()
+  @IsNotEmpty()
+  province: string;
+
+  @ApiProperty({ example: 'Tehran' })
+  @IsString()
+  @IsNotEmpty()
+  city: string;
 
   @ApiProperty({
     type: 'string',

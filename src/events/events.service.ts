@@ -3,15 +3,21 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Event } from './entities/event.entity';
 import { Repository } from 'typeorm';
-import { User } from 'src/users/entities/user.entity';
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
+// --------------------------------------------------------------------------------------------------------
 import { UserRole } from 'src/enums/User-Role.enum';
-import { GameTypes } from 'src/enums/Game-Type.enum';
+import { User } from 'src/users/entities/user.entity';
+import { CreateEventDto } from './dto/create-event.dto';
 import { SearchEventDto } from './dto/search-event.dto';
+import { UpdateEventDto } from './dto/update-event.dto';
+import { Event } from './entities/event.entity';
+import { log } from 'console';
 
 @Injectable()
 export class EventsService {
@@ -26,9 +32,6 @@ export class EventsService {
     const provider = await this.usersRepository.findOne({
       where: { id: providerId },
     });
-
-    console.log('new event', eventData);
-
     // Check user exist
     if (!provider) {
       throw new NotFoundException(`کاربر پیدا نشد`);
@@ -61,7 +64,10 @@ export class EventsService {
   // End here
 
   // find events
-  async findAll(searchEventDto: SearchEventDto) {
+  async findAll(
+    searchEventDto: SearchEventDto,
+    options: IPaginationOptions,
+  ): Promise<Pagination<Event>> {
     const { title, game_type } = searchEventDto;
 
     const queryBuilder = this.eventsRepository
@@ -69,7 +75,7 @@ export class EventsService {
       .leftJoinAndSelect('event.provider', 'provider')
       .leftJoinAndSelect('event.players', 'players');
 
-    // Apply filters based on the DTO
+    // Apply filters
     if (title) {
       queryBuilder.andWhere('event.title LIKE :title', { title: `%${title}%` });
     }
@@ -77,15 +83,8 @@ export class EventsService {
       queryBuilder.andWhere('event.game_type = :game_type', { game_type });
     }
 
-    const events = await queryBuilder.getMany();
-
-    if (events.length === 0) {
-      return {
-        message: 'ایونتی وجود ندارد',
-      };
-    }
-
-    return events;
+    // Paginate results
+    return paginate<Event>(queryBuilder, options);
   }
 
   // Find event by id
@@ -103,20 +102,19 @@ export class EventsService {
 
   // Update event
   async update(id: string, updateEventDto: UpdateEventDto) {
-    // Find the existing event by its ID
-    const event = await this.findOne(id);
+    // Retrieve the event by ID
+    const event = await this.eventsRepository.findOne({
+      where: { id },
+      relations: ['players'],
+    });
+
+    // Check if the event exists
     if (!event) {
       throw new NotFoundException('ایونت مورد نظر یافت نشد');
     }
 
-    // Exclude the `players` property from being updated
     const { players, ...eventData } = updateEventDto;
-
-    // Merge the existing event with the new data (excluding `players`)
-    const updatedEvent = this.eventsRepository.merge(event, eventData);
-
-    // Save the updated event to the database
-    await this.eventsRepository.save(updatedEvent);
+    const updatedEvent = await this.eventsRepository.merge(event, eventData);
 
     return {
       message: 'ایونت با موفقیت بروزرسانی شد',
