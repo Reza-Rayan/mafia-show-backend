@@ -37,19 +37,18 @@ export class ArticlesService {
 
   // Find all articles
   async findAll(searchQuery: SearchQueryDTO) {
-    const { search } = searchQuery;
+    const { search, page = 1, limit = 10 } = searchQuery;
 
     const queryBuilder = this.articles
       .createQueryBuilder('article')
       .leftJoinAndSelect('article.comments', 'comments');
-
     if (search) {
       queryBuilder.where('article.title LIKE :search', {
         search: `%${search}%`,
       });
     }
-
-    const articles = await queryBuilder.getMany();
+    queryBuilder.skip((page - 1) * limit).take(limit);
+    const [articles, total] = await queryBuilder.getManyAndCount();
 
     if (!articles.length) {
       return {
@@ -57,13 +56,18 @@ export class ArticlesService {
       };
     }
 
-    return articles.map((article) => ({
-      ...article,
-      image: article.image ? `/${article.image}` : null,
-      comments: article.comments.map((comment) => comment),
-    }));
+    return {
+      articles: articles.map((article) => ({
+        ...article,
+        image: article.image ? `/${article.image}` : null,
+        comments: article.comments.map((comment) => comment),
+      })),
+      totalCount: total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
-
   //  End here
 
   // Find  one article depend on id
@@ -86,29 +90,28 @@ export class ArticlesService {
   ) {
     // Find the article by id
     const article = await this.articles.findOne({ where: { id } });
-  
+
     if (!article) {
       throw new NotFoundException('مقاله مورد نظر یافت نشد');
     }
-  
+
     // Conditionally update fields
     if (updateArticleDto.title) {
       article.title = updateArticleDto.title;
     }
-  
+
     if (updateArticleDto.content) {
       article.content = updateArticleDto.content;
     }
-  
+
     // If a new image path is provided, update the image
     if (imagePath) {
       article.image = imagePath;
     }
-  
+
     // Save and return the updated article
     return await this.articles.save(article);
   }
-  
 
   // End here
 
