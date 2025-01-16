@@ -22,14 +22,13 @@ import {
 } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { UserRole } from 'src/enums/User-Role.enum';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Roles } from './decorators/role.decorator';
+import { UserRole } from 'src/enums/User-Role.enum';
 import { ArticlesService } from './articles.service';
+import { Roles } from './decorators/role.decorator';
 import { CreateArticleDto } from './dto/create-article.dto';
-import { UpdateArticleDto } from './dto/update-article.dto';
-import { RolesGuard } from './role.guard';
 import { SearchQueryDTO } from './dto/search-query.dto';
+import { UpdateArticleDto } from './dto/update-article.dto';
 // --------------------------------------------------------------------------------------
 
 @ApiTags('Articles')
@@ -37,7 +36,7 @@ import { SearchQueryDTO } from './dto/search-query.dto';
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Create a new article' })
   @ApiResponse({
@@ -86,7 +85,7 @@ export class ArticlesController {
     return this.articlesService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Update an article by ID' })
   @ApiParam({
@@ -111,7 +110,7 @@ export class ArticlesController {
     return this.articlesService.update(id, updateArticleDto, imagePath);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Delete an article by ID' })
   @ApiParam({

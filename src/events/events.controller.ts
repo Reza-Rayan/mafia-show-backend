@@ -26,7 +26,6 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { EventsService } from './events.service';
-import { RolesGuard } from './role.guard';
 import { Roles } from './decorators/role.decorator';
 import { UserRole } from 'src/enums/User-Role.enum';
 import { SearchEventDto } from './dto/search-event.dto';
@@ -37,7 +36,7 @@ import { AssignPlayerDto } from './dto/assign-to-game.dto';
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @Roles(UserRole.ADMIN, UserRole.PROVIDER)
   @Post()
   @ApiOperation({ summary: 'Create a new event' })
@@ -99,7 +98,7 @@ export class EventsController {
     return this.eventsService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @Roles(UserRole.ADMIN, UserRole.PROVIDER)
   @Patch(':id')
   @ApiOperation({ summary: 'Update an existing event by ID' })
@@ -117,7 +116,7 @@ export class EventsController {
   ) {
     return this.eventsService.update(id, updateEventDto);
   }
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @Roles(UserRole.ADMIN)
   @Delete(':id')
   @ApiOperation({ summary: 'Delete an event by ID' })

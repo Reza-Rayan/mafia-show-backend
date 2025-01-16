@@ -9,18 +9,17 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
-import { CreateGameRoleDto } from './dto/create-game_role.dto';
-import { UpdateGameRoleDto } from './dto/update-game_role.dto';
-import { FilterGameRolesDto } from './dto/filter-game_roles.dto'; // Import filter DTO
-import { GameRolesService } from './game_roles.service';
-import { GameRole } from './entities/game_role.entity';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UserRole } from 'src/enums/User-Role.enum';
-import { RolesGuard } from './role.guard';
 import { Roles } from './decorators/role.decorator';
+import { CreateGameRoleDto } from './dto/create-game_role.dto';
+import { FilterGameRolesDto } from './dto/filter-game_roles.dto'; // Import filter DTO
+import { UpdateGameRoleDto } from './dto/update-game_role.dto';
+import { GameRole } from './entities/game_role.entity';
+import { GameRolesService } from './game_roles.service';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard)
 @Roles(UserRole.ADMIN)
 @ApiTags('game-roles')
 @Controller('game-roles')

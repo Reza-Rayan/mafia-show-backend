@@ -1,26 +1,25 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiOperation, ApiResponse, ApiTags, ApiParam } from '@nestjs/swagger';
-import { User } from './entities/user.entity';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { RolesGuard } from './role.guard';
-import { Roles } from './decorators/role.decorator';
 import { UserRole } from 'src/enums/User-Role.enum';
+import { Roles } from './decorators/role.decorator';
+import { CreateUserDto } from './dto/create-user.dto';
 import { SearchUserDTO } from './dto/search-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
+import { UsersService } from './users.service';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard)
 @Roles(UserRole.ADMIN)
 @ApiTags('Users')
 @Controller('users')
@@ -32,7 +31,7 @@ export class UsersController {
   @ApiResponse({
     status: 201,
     description: 'The user has been successfully created.',
-    type: User, // Optional: Return type (for creating user, it's the created user)
+    type: User,
   })
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
